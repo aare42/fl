@@ -169,7 +169,7 @@
 
     .case-thumbnail {
       width: 100%;
-      height: 160px;
+      height: 200px;
       background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
       position: relative;
       overflow: hidden;
@@ -177,8 +177,22 @@
 
     .case-thumbnail iframe {
       width: 100%;
-      height: 100%;
+      height: 300%;
       border: none;
+      pointer-events: none;
+      transform: scale(0.5);
+      transform-origin: top left;
+      overflow: hidden;
+    }
+
+    .case-thumbnail::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.15));
       pointer-events: none;
     }
 
@@ -276,26 +290,34 @@
     }
 
     .download-btn {
-      width: 36px;
       height: 36px;
-      padding: 0;
+      padding: 0 1rem;
       border: none;
       border-radius: 0.375rem;
-      font-size: 1.25rem;
+      font-size: 0.875rem;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
-      text-align: center;
       text-decoration: none;
       display: flex;
       align-items: center;
       justify-content: center;
+      gap: 0.5rem;
       background: var(--primary-color);
       color: white;
+      white-space: nowrap;
     }
 
     .download-btn:hover {
       background: var(--primary-hover);
-      transform: scale(1.05);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 8px rgba(64, 186, 141, 0.3);
+    }
+
+    .download-icon {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
     }
 
     .share-section {
@@ -391,6 +413,18 @@
 
       .filter-area {
         padding: 1rem;
+      }
+
+      .case-actions-new {
+        flex-wrap: wrap;
+      }
+
+      .share-section {
+        width: 100%;
+      }
+
+      .download-btn {
+        width: 100%;
       }
     }
   </style>
@@ -572,7 +606,13 @@
                   `).join('') : ''}
                 </div>
                 <div class="case-actions-new">
-                  <a href="/${c.file_path}" download class="download-btn" title="Завантажити">⬇️</a>
+                  <a href="/${c.file_path}" download class="download-btn" title="Завантажити">
+                    <svg class="download-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 15.577l-3.539-3.538.708-.72L11.5 13.65V5h1v8.65l2.331-2.331.708.72L12 15.577z"/>
+                      <path d="M19 18v-5h1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-5h1v5h14z"/>
+                    </svg>
+                    Завантажити
+                  </a>
                   <div class="share-section">
                     <span class="share-label">Поділитися:</span>
                     <div class="share-btns">
