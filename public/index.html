@@ -5,88 +5,130 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Кейси з фінансової грамотності - Реальні завдання для учнів</title>
   <meta name="description" content="Високоякісні кейси з фінансової грамотності від реальних організацій, адаптовані для шкільної освіти">
-  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#40ba8d',
+            'primary-dark': '#359a75',
+            secondary: '#CE2A1E',
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body>
-  <header>
-    <nav>
-      <h1>Кейси з фінансової грамотності</h1>
-      <ul>
-        <li><a href="/">Головна</a></li>
-        <li><a href="/cases">Переглянути кейси</a></li>
-      </ul>
+<body class="bg-gray-50">
+  <!-- Navigation -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <h1 class="text-xl font-semibold text-gray-900">Кейси з фінансової грамотності</h1>
+        <ul class="flex space-x-8">
+          <li><a href="/" class="text-primary font-medium hover:text-primary-dark transition">Головна</a></li>
+          <li><a href="/cases" class="text-gray-700 hover:text-primary transition">Переглянути кейси</a></li>
+        </ul>
+      </div>
     </nav>
   </header>
 
-  <section class="hero">
-    <div class="hero-content">
-      <h2>Реальна фінансова грамотність для учнів</h2>
-      <p>
-        Ми заповнюємо прогалину між теоретичною освітою з фінансової грамотності та реальною практикою,
-        збираючи автентичні кейси від банків та фінансових організацій, ретельно адаптовані для
-        шкільних учнів. Якісний контент для вчителів, практичні знання для учнів та соціальна
-        відповідальність для наших партнерів.
-      </p>
-      <a href="/cases" class="btn btn-primary">Переглянути кейси</a>
+  <!-- Hero Section -->
+  <section class="bg-gradient-to-br from-primary to-primary-dark text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div class="max-w-3xl">
+        <h2 class="text-4xl md:text-5xl font-bold mb-6">Реальна фінансова грамотність для учнів</h2>
+        <p class="text-lg md:text-xl mb-8 text-white/90 leading-relaxed">
+          Ми заповнюємо прогалину між теоретичною освітою з фінансової грамотності та реальною практикою,
+          збираючи автентичні кейси від банків та фінансових організацій, ретельно адаптовані для
+          шкільних учнів. Якісний контент для вчителів, практичні знання для учнів та соціальна
+          відповідальність для наших партнерів.
+        </p>
+        <a href="/cases" class="inline-block bg-white text-primary px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
+          Переглянути кейси
+        </a>
+      </div>
     </div>
   </section>
 
-  <div class="container">
-    <section class="section">
-      <h2>Як це працює</h2>
-      <div class="feature-grid">
-        <div class="feature-item">
-          <h3>1. Збір</h3>
-          <p>Ми співпрацюємо з банками та фінансовими організаціями, щоб зібрати реальні кейси та сценарії.</p>
+  <!-- How It Works -->
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-gray-900 mb-12 text-center">Як це працює</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="text-center">
+          <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-3xl font-bold text-primary">1</span>
+          </div>
+          <h3 class="text-xl font-semibold mb-3 text-gray-900">Збір</h3>
+          <p class="text-gray-600 leading-relaxed">Ми співпрацюємо з банками та фінансовими організаціями, щоб зібрати реальні кейси та сценарії.</p>
         </div>
-        <div class="feature-item">
-          <h3>2. Адаптація</h3>
-          <p>Кожен кейс ретельно адаптується відповідно до віку та узгоджується зі шкільною програмою.</p>
+        <div class="text-center">
+          <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-3xl font-bold text-primary">2</span>
+          </div>
+          <h3 class="text-xl font-semibold mb-3 text-gray-900">Адаптація</h3>
+          <p class="text-gray-600 leading-relaxed">Кожен кейс ретельно адаптується відповідно до віку та узгоджується зі шкільною програмою.</p>
         </div>
-        <div class="feature-item">
-          <h3>3. Поширення</h3>
-          <p>Вчителі отримують доступ до високоякісного, готового до використання контенту, який оживляє фінансову грамотність.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>Чому це важливо</h2>
-      <div class="feature-grid">
-        <div class="feature-item">
-          <h3>Для учнів</h3>
-          <p>Навчання на реальних сценаріях замість теоретичних вправ. Розуміння того, як фінансові рішення працюють на практиці.</p>
-        </div>
-        <div class="feature-item">
-          <h3>Для вчителів</h3>
-          <p>Доступ до структурованої бази даних високоякісного контенту з пошуком за темами. Не потрібно створювати вправи з нуля.</p>
-        </div>
-        <div class="feature-item">
-          <h3>Для організацій</h3>
-          <p>Демонстрація соціальної відповідальності та навчання наступного покоління фінансової грамотності.</p>
+        <div class="text-center">
+          <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="text-3xl font-bold text-primary">3</span>
+          </div>
+          <h3 class="text-xl font-semibold mb-3 text-gray-900">Поширення</h3>
+          <p class="text-gray-600 leading-relaxed">Вчителі отримують доступ до високоякісного, готового до використання контенту, який оживляє фінансову грамотність.</p>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="section">
-      <h2>Наші партнери</h2>
-      <p>Ми вдячні за співпрацю з організаціями, які підтримують фінансову освіту:</p>
-      <div class="partners-grid" id="partners-list">
-        <div class="spinner"></div>
+  <!-- Why It Matters -->
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-gray-900 mb-12 text-center">Чому це важливо</h2>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+          <h3 class="text-xl font-semibold mb-3 text-primary">Для учнів</h3>
+          <p class="text-gray-600 leading-relaxed">Навчання на реальних сценаріях замість теоретичних вправ. Розуміння того, як фінансові рішення працюють на практиці.</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+          <h3 class="text-xl font-semibold mb-3 text-primary">Для вчителів</h3>
+          <p class="text-gray-600 leading-relaxed">Доступ до структурованої бази даних високоякісного контенту з пошуком за темами. Не потрібно створювати вправи з нуля.</p>
+        </div>
+        <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+          <h3 class="text-xl font-semibold mb-3 text-primary">Для організацій</h3>
+          <p class="text-gray-600 leading-relaxed">Демонстрація соціальної відповідальності та навчання наступного покоління фінансової грамотності.</p>
+        </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="section">
-      <h2>Долучайтесь</h2>
-      <p>
+  <!-- Partners -->
+  <section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <h2 class="text-3xl font-bold text-gray-900 mb-4 text-center">Наші партнери</h2>
+      <p class="text-center text-gray-600 mb-12">Ми вдячні за співпрацю з організаціями, які підтримують фінансову освіту:</p>
+      <div id="partners-list" class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div class="flex items-center justify-center p-8">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Get Involved -->
+  <section class="py-16 bg-gray-50">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h2 class="text-3xl font-bold text-gray-900 mb-6">Долучайтесь</h2>
+      <p class="text-gray-600 leading-relaxed mb-4">
         Ви фінансова організація, зацікавлена у наданні кейсів? Або вчитель із відгуками про те,
         як ми можемо покращити сервіс? Ми будемо раді почути вас!
       </p>
-      <p style="margin-top: 1.5rem;">
+      <p class="text-gray-900 font-medium mt-8">
         <strong>Зв'яжіться з нами:</strong> education@financialliteracy.example.com
       </p>
-    </section>
-  </div>
+    </div>
+  </section>
 
   <script>
     // Load partners
@@ -99,25 +141,25 @@
 
         if (organizations.length === 0) {
           partnersList.innerHTML = `
-            <div class="empty-state">
-              <h3>Незабаром</h3>
-              <p>Ми зараз працюємо над партнерством з фінансовими організаціями.</p>
+            <div class="col-span-full text-center py-8">
+              <h3 class="text-xl font-semibold text-gray-900 mb-2">Незабаром</h3>
+              <p class="text-gray-600">Ми зараз працюємо над партнерством з фінансовими організаціями.</p>
             </div>
           `;
         } else {
           partnersList.innerHTML = organizations.map(org => `
-            <div class="partner-card">
-              ${org.logo_url ? `<img src="${org.logo_url}" alt="${org.name}" style="max-width: 150px; height: 60px; object-fit: contain; margin-bottom: 1rem;">` : ''}
-              <h4>${org.name}</h4>
-              ${org.description ? `<p style="color: var(--text-gray); font-size: 0.875rem;">${org.description}</p>` : ''}
+            <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition flex flex-col items-center text-center">
+              ${org.logo_url ? `<img src="${org.logo_url}" alt="${org.name}" class="h-16 object-contain mb-4">` : ''}
+              <h4 class="font-semibold text-gray-900 mb-2">${org.name}</h4>
+              ${org.description ? `<p class="text-sm text-gray-600">${org.description}</p>` : ''}
             </div>
           `).join('');
         }
       } catch (error) {
         console.error('Error loading partners:', error);
         document.getElementById('partners-list').innerHTML = `
-          <div class="empty-state">
-            <p>Не вдалося завантажити партнерів.</p>
+          <div class="col-span-full text-center py-8">
+            <p class="text-gray-600">Не вдалося завантажити партнерів.</p>
           </div>
         `;
       }

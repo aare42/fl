@@ -4,468 +4,69 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Переглянути кейси - Кейси з фінансової грамотності</title>
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    /* Cases Page Specific Styles */
-    .cases-page {
-      background-color: var(--bg-light);
-      min-height: 100vh;
-    }
-
-    .cases-header {
-      background-color: white;
-      padding: 2rem 0;
-      border-bottom: 1px solid var(--border-color);
-    }
-
-    .cases-header-content {
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
-
-    .cases-header h1 {
-      font-size: 1.875rem;
-      font-weight: 500;
-      color: var(--text-dark);
-      margin-bottom: 0.5rem;
-    }
-
-    .cases-header p {
-      color: var(--text-gray);
-      font-size: 0.9375rem;
-    }
-
-    .cases-container {
-      max-width: 1300px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-
-    /* Filter Section */
-    .filter-area {
-      background: white;
-      padding: 1.5rem;
-      border-radius: 0.5rem;
-      box-shadow: var(--shadow);
-      margin-bottom: 2rem;
-    }
-
-    .filter-title {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--text-dark);
-      margin-bottom: 1rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .filter-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.625rem;
-    }
-
-    .filter-tag {
-      padding: 0.5rem 1rem;
-      border: 1px solid var(--border-color);
-      border-radius: 0.375rem;
-      background: white;
-      color: var(--text-dark);
-      font-size: 0.875rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .filter-tag:hover {
-      border-color: var(--primary-color);
-      color: var(--primary-color);
-    }
-
-    .filter-tag.active {
-      background: var(--primary-color);
-      border-color: var(--primary-color);
-      color: white;
-    }
-
-    .active-filters {
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid var(--border-color);
-      display: none;
-    }
-
-    .active-filters.show {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
-
-    .active-filters-label {
-      font-size: 0.8125rem;
-      font-weight: 600;
-      color: var(--text-gray);
-    }
-
-    .active-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.375rem 0.75rem;
-      background: var(--primary-color);
-      color: white;
-      border-radius: 1rem;
-      font-size: 0.8125rem;
-      font-weight: 500;
-    }
-
-    .active-tag button {
-      background: none;
-      border: none;
-      color: white;
-      cursor: pointer;
-      font-size: 1rem;
-      padding: 0;
-      line-height: 1;
-    }
-
-    .clear-filters {
-      padding: 0.25rem 0.75rem;
-      background: white;
-      border: 1px solid var(--border-color);
-      border-radius: 1rem;
-      font-size: 0.8125rem;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-
-    .clear-filters:hover {
-      background: var(--bg-light);
-    }
-
-    /* Cases Grid */
-    .cases-grid-new {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .case-card-new {
-      background: white;
-      border-radius: 0.5rem;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      transition: all 0.2s;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .case-card-new:hover {
-      box-shadow: var(--shadow-hover);
-      transform: translateY(-2px);
-    }
-
-    .case-thumbnail {
-      width: 100%;
-      height: 200px;
-      background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
-      position: relative;
-      overflow: hidden;
-    }
-
-    .case-thumbnail iframe {
-      width: 100%;
-      height: 300%;
-      border: none;
-      pointer-events: none;
-      transform: scale(0.5);
-      transform-origin: top left;
-      overflow: hidden;
-    }
-
-    .case-thumbnail::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 40px;
-      background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.15));
-      pointer-events: none;
-    }
-
-    .case-thumbnail-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      color: white;
-    }
-
-    .case-thumbnail-icon {
-      font-size: 2.5rem;
-      margin-bottom: 0.5rem;
-    }
-
-    .case-thumbnail-type {
-      font-size: 0.8125rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      opacity: 0.9;
-    }
-
-    .case-body {
-      padding: 1.25rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .case-title {
-      font-size: 1.125rem;
-      font-weight: 600;
-      color: var(--text-dark);
-      margin-bottom: 0.5rem;
-      line-height: 1.4;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .case-description {
-      font-size: 0.875rem;
-      color: var(--text-gray);
-      line-height: 1.5;
-      margin-bottom: 1rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      flex: 1;
-    }
-
-    .case-info {
-      display: flex;
-      gap: 1rem;
-      margin-bottom: 1rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid var(--border-color);
-      font-size: 0.8125rem;
-      color: var(--text-gray);
-      flex-wrap: wrap;
-    }
-
-    .case-info-item {
-      display: flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
-
-    .case-tags-new {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.375rem;
-      margin-bottom: 1rem;
-      min-height: 24px;
-    }
-
-    .case-tag-new {
-      padding: 0.25rem 0.625rem;
-      background: rgba(64, 186, 141, 0.1);
-      color: var(--primary-color);
-      border-radius: 0.25rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .case-actions-new {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .download-btn {
-      height: 36px;
-      padding: 0 1rem;
-      border: none;
-      border-radius: 0.375rem;
-      font-size: 0.875rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      background: var(--primary-color);
-      color: white;
-      white-space: nowrap;
-    }
-
-    .download-btn:hover {
-      background: var(--primary-hover);
-      transform: translateY(-1px);
-      box-shadow: 0 2px 8px rgba(64, 186, 141, 0.3);
-    }
-
-    .download-icon {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
-    }
-
-    .share-section {
-      display: flex;
-      align-items: center;
-      gap: 0.625rem;
-      flex: 1;
-    }
-
-    .share-label {
-      font-size: 0.75rem;
-      color: var(--text-gray);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    .share-btns {
-      display: flex;
-      gap: 0.375rem;
-    }
-
-    .share-btn-mini {
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 0.25rem;
-      text-decoration: none;
-      color: white;
-      font-size: 0.875rem;
-      transition: all 0.2s;
-      font-weight: 600;
-    }
-
-    .share-btn-mini:hover {
-      transform: translateY(-2px);
-      opacity: 0.9;
-    }
-
-    .share-btn-mini.facebook {
-      background-color: #1877f2;
-    }
-
-    .share-btn-mini.twitter {
-      background-color: #1da1f2;
-    }
-
-    .share-btn-mini.linkedin {
-      background-color: #0a66c2;
-    }
-
-    .share-btn-mini.telegram {
-      background-color: #0088cc;
-    }
-
-    /* Empty state */
-    .cases-empty {
-      text-align: center;
-      padding: 4rem 2rem;
-      background: white;
-      border-radius: 0.5rem;
-    }
-
-    .cases-empty h3 {
-      font-size: 1.25rem;
-      font-weight: 500;
-      color: var(--text-dark);
-      margin-bottom: 0.5rem;
-    }
-
-    .cases-empty p {
-      color: var(--text-gray);
-    }
-
-    /* Loading */
-    .cases-loading {
-      text-align: center;
-      padding: 3rem;
-    }
-
-    @media (max-width: 768px) {
-      .cases-header-content,
-      .cases-container {
-        padding-left: 1rem;
-        padding-right: 1rem;
-      }
-
-      .cases-grid-new {
-        grid-template-columns: 1fr;
-      }
-
-      .filter-area {
-        padding: 1rem;
-      }
-
-      .case-actions-new {
-        flex-wrap: wrap;
-      }
-
-      .share-section {
-        width: 100%;
-      }
-
-      .download-btn {
-        width: 100%;
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#40ba8d',
+            'primary-dark': '#359a75',
+            secondary: '#CE2A1E',
+          }
+        }
       }
     }
-  </style>
+  </script>
 </head>
-<body class="cases-page">
-  <header>
-    <nav>
-      <h1>Кейси з фінансової грамотності</h1>
-      <ul>
-        <li><a href="/">Головна</a></li>
-        <li><a href="/cases">Переглянути кейси</a></li>
-      </ul>
+<body class="bg-gray-50">
+  <!-- Navigation -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <h1 class="text-xl font-semibold text-gray-900">Кейси з фінансової грамотності</h1>
+        <ul class="flex space-x-8">
+          <li><a href="/" class="text-gray-700 hover:text-primary transition">Головна</a></li>
+          <li><a href="/cases" class="text-primary font-medium hover:text-primary-dark transition">Переглянути кейси</a></li>
+        </ul>
+      </div>
     </nav>
   </header>
 
-  <div class="cases-header">
-    <div class="cases-header-content">
-      <h1>Переглянути кейси з фінансової грамотності</h1>
-      <p>Реальні кейси від фінансових організацій, адаптовані для освіти</p>
+  <!-- Page Header -->
+  <div class="bg-white border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Переглянути кейси з фінансової грамотності</h1>
+      <p class="text-gray-600">Реальні кейси від фінансових організацій, адаптовані для освіти</p>
     </div>
   </div>
 
-  <div class="cases-container">
-    <div class="filter-area">
-      <div class="filter-title">Фільтрувати за темами</div>
-      <div class="filter-tags" id="filter-tags"></div>
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Filters -->
+    <div class="bg-white rounded-xl shadow-sm p-6 mb-8">
+      <h2 class="text-sm font-semibold text-gray-700 uppercase tracking-wider mb-4">Фільтрувати за темами</h2>
+      <div id="filter-tags" class="flex flex-wrap gap-2 mb-4"></div>
 
-      <div class="active-filters" id="active-filters">
-        <span class="active-filters-label">Активні:</span>
-        <div id="active-tags-list"></div>
-        <button class="clear-filters" onclick="clearAllFilters()">Очистити все</button>
+      <!-- Active Filters -->
+      <div id="active-filters" class="hidden pt-4 border-t border-gray-200">
+        <div class="flex flex-wrap items-center gap-3">
+          <span class="text-sm font-medium text-gray-600">Активні:</span>
+          <div id="active-tags-list" class="flex flex-wrap gap-2"></div>
+          <button onclick="clearAllFilters()" class="text-sm text-gray-600 hover:text-gray-900 underline">
+            Очистити все
+          </button>
+        </div>
       </div>
     </div>
 
+    <!-- Cases Grid -->
     <div id="cases-content">
-      <div class="cases-loading">
-        <div class="spinner"></div>
+      <div class="flex justify-center items-center py-20">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
       </div>
     </div>
   </div>
-
 
   <script>
     let allTags = [];
@@ -480,7 +81,10 @@
 
         const filterTagsContainer = document.getElementById('filter-tags');
         filterTagsContainer.innerHTML = allTags.map(tag => `
-          <button class="filter-tag" data-tag="${tag.name}" onclick="toggleFilterTag('${tag.name}')">
+          <button
+            class="filter-tag px-4 py-2 rounded-lg border-2 border-gray-200 text-gray-700 font-medium hover:border-primary hover:text-primary transition"
+            data-tag="${tag.name}"
+            onclick="toggleFilterTag('${tag.name}')">
             ${tag.name}
           </button>
         `).join('');
@@ -507,9 +111,9 @@
       document.querySelectorAll('.filter-tag').forEach(btn => {
         const tag = btn.getAttribute('data-tag');
         if (selectedTags.includes(tag)) {
-          btn.classList.add('active');
+          btn.className = 'filter-tag px-4 py-2 rounded-lg border-2 border-primary bg-primary text-white font-medium transition';
         } else {
-          btn.classList.remove('active');
+          btn.className = 'filter-tag px-4 py-2 rounded-lg border-2 border-gray-200 text-gray-700 font-medium hover:border-primary hover:text-primary transition';
         }
       });
 
@@ -518,15 +122,19 @@
       const activeTagsList = document.getElementById('active-tags-list');
 
       if (selectedTags.length > 0) {
-        activeFiltersContainer.classList.add('show');
+        activeFiltersContainer.classList.remove('hidden');
         activeTagsList.innerHTML = selectedTags.map(tag => `
-          <span class="active-tag">
+          <span class="inline-flex items-center gap-2 px-3 py-1 bg-primary text-white rounded-full text-sm font-medium">
             ${tag}
-            <button onclick="toggleFilterTag('${tag}')">&times;</button>
+            <button onclick="toggleFilterTag('${tag}')" class="hover:bg-primary-dark rounded-full p-0.5 transition">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
+            </button>
           </span>
         `).join('');
       } else {
-        activeFiltersContainer.classList.remove('show');
+        activeFiltersContainer.classList.add('hidden');
       }
     }
 
@@ -551,9 +159,9 @@
       } catch (error) {
         console.error('Error loading cases:', error);
         document.getElementById('cases-content').innerHTML = `
-          <div class="cases-empty">
-            <h3>Помилка завантаження кейсів</h3>
-            <p>Будь ласка, спробуйте пізніше.</p>
+          <div class="text-center py-12">
+            <p class="text-xl font-semibold text-gray-900 mb-2">Помилка завантаження кейсів</p>
+            <p class="text-gray-600">Будь ласка, спробуйте пізніше.</p>
           </div>
         `;
       }
@@ -565,73 +173,107 @@
 
       if (cases.length === 0) {
         casesContent.innerHTML = `
-          <div class="cases-empty">
-            <h3>Кейси не знайдено</h3>
-            <p>Спробуйте вибрати інші фільтри або переглянути всі кейси.</p>
+          <div class="text-center py-12">
+            <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+            <p class="text-xl font-semibold text-gray-900 mb-2">Кейси не знайдено</p>
+            <p class="text-gray-600">Спробуйте вибрати інші фільтри або переглянути всі кейси.</p>
           </div>
         `;
         return;
       }
 
       casesContent.innerHTML = `
-        <div class="cases-grid-new">
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           ${cases.map(c => `
-            <div class="case-card-new">
-              <div class="case-thumbnail">
+            <div class="bg-white rounded-xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col">
+              <!-- Preview -->
+              <div class="h-48 bg-gradient-to-br from-primary to-primary-dark relative overflow-hidden">
                 ${c.file_type === '.pdf' ? `
-                  <iframe src="/${c.file_path}#toolbar=0&navpanes=0&scrollbar=0" loading="lazy"></iframe>
+                  <div class="absolute inset-0 flex items-center justify-center">
+                    <svg class="w-16 h-16 text-white/40" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clip-rule="evenodd"></path>
+                    </svg>
+                  </div>
+                  <div class="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/20 to-transparent"></div>
                 ` : `
-                  <div class="case-thumbnail-placeholder">
-                    <div class="case-thumbnail-icon">📄</div>
-                    <div class="case-thumbnail-type">Файл ${c.file_type.replace('.', '').toUpperCase()}</div>
+                  <div class="absolute inset-0 flex flex-col items-center justify-center text-white">
+                    <svg class="w-16 h-16 mb-2 opacity-40" fill="currentColor" viewBox="0 0 20 20">
+                      <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"></path>
+                    </svg>
+                    <span class="text-sm font-semibold uppercase tracking-wider">${c.file_type.replace('.', '')}</span>
                   </div>
                 `}
               </div>
-              <div class="case-body">
-                <div class="case-title">${c.name}</div>
-                ${c.description ? `<div class="case-description">${c.description}</div>` : '<div class="case-description" style="min-height: 0;"></div>'}
-                <div class="case-info">
+
+              <!-- Content -->
+              <div class="p-5 flex-1 flex flex-col">
+                <h3 class="text-lg font-semibold text-gray-900 mb-3 line-clamp-2">${c.name}</h3>
+
+                ${c.description ? `<p class="text-sm text-gray-600 mb-4 line-clamp-2">${c.description}</p>` : ''}
+
+                <!-- Meta Info -->
+                <div class="flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600 mb-4 pb-4 border-b border-gray-100">
                   ${c.organization_name ? `
-                    <div class="case-info-item">
-                      <strong>Партнер:</strong> ${c.organization_name}
+                    <div class="flex items-center gap-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                      </svg>
+                      <span>${c.organization_name}</span>
                     </div>
                   ` : ''}
-                  <div class="case-info-item">
-                    <strong>Формат:</strong> ${c.file_type.replace('.', '').toUpperCase()}
+                  <div class="flex items-center gap-1">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                    </svg>
+                    <span>${c.file_type.replace('.', '').toUpperCase()}</span>
                   </div>
                 </div>
-                <div class="case-tags-new">
-                  ${c.tags && c.tags.length > 0 ? c.tags.map(tag => `
-                    <span class="case-tag-new">${tag}</span>
-                  `).join('') : ''}
-                </div>
-                <div class="case-actions-new">
-                  <a href="/${c.file_path}" download class="download-btn" title="Завантажити">
-                    <svg class="download-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 15.577l-3.539-3.538.708-.72L11.5 13.65V5h1v8.65l2.331-2.331.708.72L12 15.577z"/>
-                      <path d="M19 18v-5h1v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-5h1v5h14z"/>
+
+                <!-- Tags -->
+                ${c.tags && c.tags.length > 0 ? `
+                  <div class="flex flex-wrap gap-2 mb-4">
+                    ${c.tags.map(tag => `
+                      <span class="px-2 py-1 bg-primary/10 text-primary text-xs font-medium rounded">
+                        ${tag}
+                      </span>
+                    `).join('')}
+                  </div>
+                ` : '<div class="mb-4"></div>'}
+
+                <!-- Actions -->
+                <div class="mt-auto flex flex-col sm:flex-row gap-3">
+                  <a href="/${c.file_path}" download
+                     class="flex-1 flex items-center justify-center gap-2 bg-primary hover:bg-primary-dark text-white px-4 py-2.5 rounded-lg font-medium transition shadow-sm hover:shadow-md">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                     </svg>
                     Завантажити
                   </a>
-                  <div class="share-section">
-                    <span class="share-label">Поділитися:</span>
-                    <div class="share-btns">
+                </div>
+
+                <!-- Share -->
+                <div class="mt-3 pt-3 border-t border-gray-100">
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs font-medium text-gray-600 uppercase tracking-wider">Поділитися:</span>
+                    <div class="flex gap-2">
                       <a href="https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.origin + '/cases?id=' + c.id)}"
                          target="_blank"
-                         class="share-btn-mini facebook"
-                         title="Share on Facebook">f</a>
+                         class="w-8 h-8 flex items-center justify-center rounded bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold transition"
+                         title="Facebook">f</a>
                       <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(c.name)}&url=${encodeURIComponent(window.location.origin + '/cases?id=' + c.id)}"
                          target="_blank"
-                         class="share-btn-mini twitter"
-                         title="Share on Twitter">𝕏</a>
+                         class="w-8 h-8 flex items-center justify-center rounded bg-sky-500 hover:bg-sky-600 text-white text-sm transition"
+                         title="Twitter">𝕏</a>
                       <a href="https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.origin + '/cases?id=' + c.id)}"
                          target="_blank"
-                         class="share-btn-mini linkedin"
-                         title="Share on LinkedIn">in</a>
+                         class="w-8 h-8 flex items-center justify-center rounded bg-blue-700 hover:bg-blue-800 text-white text-xs font-semibold transition"
+                         title="LinkedIn">in</a>
                       <a href="https://t.me/share/url?url=${encodeURIComponent(window.location.origin + '/cases?id=' + c.id)}&text=${encodeURIComponent(c.name)}"
                          target="_blank"
-                         class="share-btn-mini telegram"
-                         title="Share on Telegram">✈️</a>
+                         class="w-8 h-8 flex items-center justify-center rounded bg-sky-400 hover:bg-sky-500 text-white text-lg transition"
+                         title="Telegram">✈</a>
                     </div>
                   </div>
                 </div>

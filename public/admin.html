@@ -4,148 +4,234 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Панель адміністратора - Кейси з фінансової грамотності</title>
-  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#40ba8d',
+            'primary-dark': '#359a75',
+            secondary: '#CE2A1E',
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body>
-  <header>
-    <nav>
-      <h1>Кейси з фінансової грамотності</h1>
-      <ul>
-        <li><a href="/">Головна</a></li>
-        <li><a href="/cases">Переглянути кейси</a></li>
-      </ul>
+<body class="bg-gray-50">
+  <!-- Navigation -->
+  <header class="bg-white shadow-sm">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <h1 class="text-xl font-semibold text-gray-900">Кейси з фінансової грамотності</h1>
+        <ul class="flex space-x-8">
+          <li><a href="/" class="text-gray-700 hover:text-primary transition">Головна</a></li>
+          <li><a href="/cases" class="text-gray-700 hover:text-primary transition">Переглянути кейси</a></li>
+        </ul>
+      </div>
     </nav>
   </header>
 
-  <div class="container">
-    <!-- Login Form -->
-    <section id="login-section" class="section" style="max-width: 400px; margin: 2rem auto;">
-      <h2>Вхід для адміністратора</h2>
-      <div id="login-message"></div>
-      <form id="login-form" onsubmit="login(event)">
-        <div class="form-group">
-          <label for="username">Ім'я користувача</label>
-          <input type="text" id="username" required>
-        </div>
-        <div class="form-group">
-          <label for="password">Пароль</label>
-          <input type="password" id="password" required>
-        </div>
-        <button type="submit" class="btn btn-primary" style="width: 100%;">Увійти</button>
-      </form>
-      <p style="margin-top: 1rem; color: var(--text-gray); font-size: 0.875rem;">
-        Стандартні дані: admin / admin123
-      </p>
-    </section>
+  <!-- Login Section -->
+  <div id="login-section" class="min-h-screen flex items-center justify-center px-4">
+    <div class="max-w-md w-full">
+      <div class="bg-white rounded-xl shadow-lg p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Вхід для адміністратора</h2>
+        <div id="login-message" class="mb-4"></div>
+        <form id="login-form" onsubmit="login(event)" class="space-y-4">
+          <div>
+            <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Ім'я користувача</label>
+            <input type="text" id="username" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition">
+          </div>
+          <div>
+            <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Пароль</label>
+            <input type="password" id="password" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition">
+          </div>
+          <button type="submit"
+                  class="w-full bg-primary hover:bg-primary-dark text-white font-semibold py-3 rounded-lg transition shadow-sm hover:shadow">
+            Увійти
+          </button>
+        </form>
+        <p class="mt-4 text-sm text-gray-600 text-center">
+          Стандартні дані: admin / admin123
+        </p>
+      </div>
+    </div>
+  </div>
 
-    <!-- Admin Panel -->
-    <div id="admin-panel" style="display: none;">
-      <section class="section">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-          <h2>Панель адміністратора</h2>
-          <button class="btn btn-secondary" onclick="logout()">Вийти</button>
+  <!-- Admin Panel -->
+  <div id="admin-panel" class="hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Header -->
+      <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+        <div class="flex justify-between items-center">
+          <h2 class="text-2xl font-bold text-gray-900">Панель адміністратора</h2>
+          <button onclick="logout()"
+                  class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg font-medium transition">
+            Вийти
+          </button>
         </div>
+      </div>
 
-        <div class="admin-actions">
-          <button class="btn btn-primary" onclick="showSection('cases')">Керування кейсами</button>
-          <button class="btn btn-primary" onclick="showSection('organizations')">Керування організаціями</button>
+      <!-- Tab Navigation -->
+      <div class="bg-white rounded-xl shadow-sm p-6 mb-6">
+        <div class="flex gap-4">
+          <button onclick="showSection('cases')"
+                  class="flex-1 bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-dark transition">
+            Керування кейсами
+          </button>
+          <button onclick="showSection('organizations')"
+                  class="flex-1 bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:bg-primary-dark transition">
+            Керування організаціями
+          </button>
         </div>
-      </section>
+      </div>
 
       <!-- Cases Section -->
-      <section id="cases-section" class="section">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-          <h3>Кейси</h3>
-          <button class="btn btn-success" onclick="showAddCaseModal()">Додати новий кейс</button>
+      <section id="cases-section" class="bg-white rounded-xl shadow-sm p-6">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-xl font-bold text-gray-900">Кейси</h3>
+          <button onclick="showAddCaseModal()"
+                  class="bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-lg font-medium transition flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Додати новий кейс
+          </button>
         </div>
         <div id="cases-list-admin">
-          <div class="spinner"></div>
+          <div class="flex justify-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
         </div>
       </section>
 
       <!-- Organizations Section -->
-      <section id="organizations-section" class="section" style="display: none;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-          <h3>Партнерські організації</h3>
-          <button class="btn btn-success" onclick="showAddOrgModal()">Додати нову організацію</button>
+      <section id="organizations-section" class="bg-white rounded-xl shadow-sm p-6 hidden">
+        <div class="flex justify-between items-center mb-6">
+          <h3 class="text-xl font-bold text-gray-900">Партнерські організації</h3>
+          <button onclick="showAddOrgModal()"
+                  class="bg-primary hover:bg-primary-dark text-white px-6 py-2.5 rounded-lg font-medium transition flex items-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Додати нову організацію
+          </button>
         </div>
         <div id="organizations-list-admin">
-          <div class="spinner"></div>
+          <div class="flex justify-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
         </div>
       </section>
     </div>
   </div>
 
   <!-- Add/Edit Case Modal -->
-  <div id="case-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="case-modal-title">Додати новий кейс</h2>
-        <button class="close-btn" onclick="closeCaseModal()">&times;</button>
+  <div id="case-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
+        <h2 id="case-modal-title" class="text-xl font-bold text-gray-900">Додати новий кейс</h2>
+        <button onclick="closeCaseModal()" class="text-gray-400 hover:text-gray-600 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
       </div>
-      <div id="case-message"></div>
-      <form id="case-form" onsubmit="saveCase(event)">
-        <input type="hidden" id="case-id">
-        <div class="form-group">
-          <label for="case-name">Назва кейсу *</label>
-          <input type="text" id="case-name" required>
-        </div>
-        <div class="form-group">
-          <label for="case-description">Опис</label>
-          <textarea id="case-description" rows="3"></textarea>
-        </div>
-        <div class="form-group">
-          <label for="case-organization">Партнерська організація</label>
-          <select id="case-organization">
-            <option value="">Без партнера</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label for="case-file">Файл (PDF або TEX) *</label>
-          <input type="file" id="case-file" accept=".pdf,.tex">
-          <small id="current-file" style="display: block; margin-top: 0.5rem; color: var(--text-gray);"></small>
-        </div>
-        <div class="form-group">
-          <label for="case-tags-input">Теги (натисніть Enter, щоб додати)</label>
-          <div class="tag-input" id="case-tags-container">
-            <input type="text" id="case-tags-input" placeholder="Введіть тег і натисніть Enter">
+      <div class="p-6">
+        <div id="case-message" class="mb-4"></div>
+        <form id="case-form" onsubmit="saveCase(event)" class="space-y-4">
+          <input type="hidden" id="case-id">
+          <div>
+            <label for="case-name" class="block text-sm font-medium text-gray-700 mb-1">Назва кейсу *</label>
+            <input type="text" id="case-name" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition">
           </div>
-        </div>
-        <div style="display: flex; gap: 1rem;">
-          <button type="submit" class="btn btn-success">Зберегти кейс</button>
-          <button type="button" class="btn btn-secondary" onclick="closeCaseModal()">Скасувати</button>
-        </div>
-      </form>
+          <div>
+            <label for="case-description" class="block text-sm font-medium text-gray-700 mb-1">Опис</label>
+            <textarea id="case-description" rows="3"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"></textarea>
+          </div>
+          <div>
+            <label for="case-organization" class="block text-sm font-medium text-gray-700 mb-1">Партнерська організація</label>
+            <select id="case-organization"
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition">
+              <option value="">Без партнера</option>
+            </select>
+          </div>
+          <div>
+            <label for="case-file" class="block text-sm font-medium text-gray-700 mb-1">Файл (PDF або TEX) *</label>
+            <input type="file" id="case-file" accept=".pdf,.tex"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition">
+            <small id="current-file" class="block mt-2 text-sm text-gray-600"></small>
+          </div>
+          <div>
+            <label for="case-tags-input" class="block text-sm font-medium text-gray-700 mb-1">Теги (натисніть Enter, щоб додати)</label>
+            <div id="case-tags-container" class="flex flex-wrap gap-2 p-3 border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-primary focus-within:border-transparent">
+              <input type="text" id="case-tags-input" placeholder="Введіть тег і натисніть Enter"
+                     class="flex-1 min-w-[200px] outline-none">
+            </div>
+          </div>
+          <div class="flex gap-3 pt-4">
+            <button type="submit"
+                    class="flex-1 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg font-semibold transition">
+              Зберегти кейс
+            </button>
+            <button type="button" onclick="closeCaseModal()"
+                    class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg font-semibold transition">
+              Скасувати
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
   <!-- Add/Edit Organization Modal -->
-  <div id="org-modal" class="modal">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h2 id="org-modal-title">Додати нову організацію</h2>
-        <button class="close-btn" onclick="closeOrgModal()">&times;</button>
+  <div id="org-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
+        <h2 id="org-modal-title" class="text-xl font-bold text-gray-900">Додати нову організацію</h2>
+        <button onclick="closeOrgModal()" class="text-gray-400 hover:text-gray-600 transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
       </div>
-      <div id="org-message"></div>
-      <form id="org-form" onsubmit="saveOrganization(event)">
-        <input type="hidden" id="org-id">
-        <div class="form-group">
-          <label for="org-name">Назва організації *</label>
-          <input type="text" id="org-name" required>
-        </div>
-        <div class="form-group">
-          <label for="org-logo">URL логотипу</label>
-          <input type="url" id="org-logo" placeholder="https://example.com/logo.png">
-        </div>
-        <div class="form-group">
-          <label for="org-description">Опис</label>
-          <textarea id="org-description" rows="3"></textarea>
-        </div>
-        <div style="display: flex; gap: 1rem;">
-          <button type="submit" class="btn btn-success">Зберегти організацію</button>
-          <button type="button" class="btn btn-secondary" onclick="closeOrgModal()">Скасувати</button>
-        </div>
-      </form>
+      <div class="p-6">
+        <div id="org-message" class="mb-4"></div>
+        <form id="org-form" onsubmit="saveOrganization(event)" class="space-y-4">
+          <input type="hidden" id="org-id">
+          <div>
+            <label for="org-name" class="block text-sm font-medium text-gray-700 mb-1">Назва організації *</label>
+            <input type="text" id="org-name" required
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition">
+          </div>
+          <div>
+            <label for="org-logo" class="block text-sm font-medium text-gray-700 mb-1">URL логотипу</label>
+            <input type="url" id="org-logo" placeholder="https://example.com/logo.png"
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition">
+          </div>
+          <div>
+            <label for="org-description" class="block text-sm font-medium text-gray-700 mb-1">Опис</label>
+            <textarea id="org-description" rows="3"
+                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent transition"></textarea>
+          </div>
+          <div class="flex gap-3 pt-4">
+            <button type="submit"
+                    class="flex-1 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-lg font-semibold transition">
+              Зберегти організацію
+            </button>
+            <button type="button" onclick="closeOrgModal()"
+                    class="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded-lg font-semibold transition">
+              Скасувати
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 
@@ -161,13 +247,13 @@
         const data = await response.json();
 
         if (data.authenticated) {
-          document.getElementById('login-section').style.display = 'none';
-          document.getElementById('admin-panel').style.display = 'block';
+          document.getElementById('login-section').classList.add('hidden');
+          document.getElementById('admin-panel').classList.remove('hidden');
           loadOrganizations();
           loadCases();
         } else {
-          document.getElementById('login-section').style.display = 'block';
-          document.getElementById('admin-panel').style.display = 'none';
+          document.getElementById('login-section').classList.remove('hidden');
+          document.getElementById('admin-panel').classList.add('hidden');
         }
       } catch (error) {
         console.error('Auth check failed:', error);
@@ -195,13 +281,13 @@
           checkAuth();
         } else {
           document.getElementById('login-message').innerHTML = `
-            <div class="alert alert-error">${data.error}</div>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">${data.error}</div>
           `;
         }
       } catch (error) {
         console.error('Login failed:', error);
         document.getElementById('login-message').innerHTML = `
-          <div class="alert alert-error">Помилка входу. Спробуйте ще раз.</div>
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">Помилка входу. Спробуйте ще раз.</div>
         `;
       }
     }
@@ -218,8 +304,8 @@
 
     // Show section
     function showSection(section) {
-      document.getElementById('cases-section').style.display = section === 'cases' ? 'block' : 'none';
-      document.getElementById('organizations-section').style.display = section === 'organizations' ? 'block' : 'none';
+      document.getElementById('cases-section').classList.toggle('hidden', section !== 'cases');
+      document.getElementById('organizations-section').classList.toggle('hidden', section !== 'organizations');
     }
 
     // Load cases
@@ -231,36 +317,50 @@
         const casesList = document.getElementById('cases-list-admin');
 
         if (cases.length === 0) {
-          casesList.innerHTML = '<div class="empty-state"><p>Ще немає кейсів. Додайте перший кейс!</p></div>';
+          casesList.innerHTML = `
+            <div class="text-center py-12">
+              <p class="text-gray-600">Ще немає кейсів. Додайте перший кейс!</p>
+            </div>
+          `;
         } else {
           casesList.innerHTML = `
-            <table style="width: 100%; border-collapse: collapse;">
-              <thead>
-                <tr style="border-bottom: 2px solid var(--border-color);">
-                  <th style="text-align: left; padding: 0.75rem;">Назва</th>
-                  <th style="text-align: left; padding: 0.75rem;">Організація</th>
-                  <th style="text-align: left; padding: 0.75rem;">Теги</th>
-                  <th style="text-align: left; padding: 0.75rem;">Тип</th>
-                  <th style="text-align: right; padding: 0.75rem;">Дії</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${cases.map(c => `
-                  <tr style="border-bottom: 1px solid var(--border-color);">
-                    <td style="padding: 0.75rem;">${c.name}</td>
-                    <td style="padding: 0.75rem;">${c.organization_name || '-'}</td>
-                    <td style="padding: 0.75rem;">
-                      ${c.tags && c.tags.length > 0 ? c.tags.map(t => `<span class="tag" style="font-size: 0.75rem;">${t}</span>`).join(' ') : '-'}
-                    </td>
-                    <td style="padding: 0.75rem;">${c.file_type.toUpperCase()}</td>
-                    <td style="padding: 0.75rem; text-align: right;">
-                      <button class="btn btn-secondary" onclick="editCase(${c.id})" style="padding: 0.5rem 1rem; margin-right: 0.5rem;">Редагувати</button>
-                      <button class="btn btn-danger" onclick="deleteCase(${c.id})" style="padding: 0.5rem 1rem;">Видалити</button>
-                    </td>
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead>
+                  <tr class="border-b-2 border-gray-200">
+                    <th class="text-left py-3 px-4 font-semibold text-gray-700">Назва</th>
+                    <th class="text-left py-3 px-4 font-semibold text-gray-700">Організація</th>
+                    <th class="text-left py-3 px-4 font-semibold text-gray-700">Теги</th>
+                    <th class="text-left py-3 px-4 font-semibold text-gray-700">Тип</th>
+                    <th class="text-right py-3 px-4 font-semibold text-gray-700">Дії</th>
                   </tr>
-                `).join('')}
-              </tbody>
-            </table>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                  ${cases.map(c => `
+                    <tr class="hover:bg-gray-50">
+                      <td class="py-3 px-4">${c.name}</td>
+                      <td class="py-3 px-4 text-gray-600">${c.organization_name || '-'}</td>
+                      <td class="py-3 px-4">
+                        ${c.tags && c.tags.length > 0 ? c.tags.map(t => `
+                          <span class="inline-block px-2 py-1 bg-primary/10 text-primary text-xs rounded mr-1">${t}</span>
+                        `).join('') : '-'}
+                      </td>
+                      <td class="py-3 px-4 text-gray-600">${c.file_type.toUpperCase()}</td>
+                      <td class="py-3 px-4 text-right space-x-2">
+                        <button onclick="editCase(${c.id})"
+                                class="inline-flex items-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition">
+                          Редагувати
+                        </button>
+                        <button onclick="deleteCase(${c.id})"
+                                class="inline-flex items-center px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition">
+                          Видалити
+                        </button>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
           `;
         }
       } catch (error) {
@@ -283,30 +383,42 @@
         const orgsList = document.getElementById('organizations-list-admin');
 
         if (organizations.length === 0) {
-          orgsList.innerHTML = '<div class="empty-state"><p>Ще немає організацій. Додайте першого партнера!</p></div>';
+          orgsList.innerHTML = `
+            <div class="text-center py-12">
+              <p class="text-gray-600">Ще немає організацій. Додайте першого партнера!</p>
+            </div>
+          `;
         } else {
           orgsList.innerHTML = `
-            <table style="width: 100%; border-collapse: collapse;">
-              <thead>
-                <tr style="border-bottom: 2px solid var(--border-color);">
-                  <th style="text-align: left; padding: 0.75rem;">Назва</th>
-                  <th style="text-align: left; padding: 0.75rem;">Опис</th>
-                  <th style="text-align: right; padding: 0.75rem;">Дії</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${organizations.map(org => `
-                  <tr style="border-bottom: 1px solid var(--border-color);">
-                    <td style="padding: 0.75rem;">${org.name}</td>
-                    <td style="padding: 0.75rem;">${org.description || '-'}</td>
-                    <td style="padding: 0.75rem; text-align: right;">
-                      <button class="btn btn-secondary" onclick="editOrganization(${org.id})" style="padding: 0.5rem 1rem; margin-right: 0.5rem;">Редагувати</button>
-                      <button class="btn btn-danger" onclick="deleteOrganization(${org.id})" style="padding: 0.5rem 1rem;">Видалити</button>
-                    </td>
+            <div class="overflow-x-auto">
+              <table class="w-full">
+                <thead>
+                  <tr class="border-b-2 border-gray-200">
+                    <th class="text-left py-3 px-4 font-semibold text-gray-700">Назва</th>
+                    <th class="text-left py-3 px-4 font-semibold text-gray-700">Опис</th>
+                    <th class="text-right py-3 px-4 font-semibold text-gray-700">Дії</th>
                   </tr>
-                `).join('')}
-              </tbody>
-            </table>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                  ${organizations.map(org => `
+                    <tr class="hover:bg-gray-50">
+                      <td class="py-3 px-4">${org.name}</td>
+                      <td class="py-3 px-4 text-gray-600">${org.description || '-'}</td>
+                      <td class="py-3 px-4 text-right space-x-2">
+                        <button onclick="editOrganization(${org.id})"
+                                class="inline-flex items-center px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition">
+                          Редагувати
+                        </button>
+                        <button onclick="deleteOrganization(${org.id})"
+                                class="inline-flex items-center px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition">
+                          Видалити
+                        </button>
+                      </td>
+                    </tr>
+                  `).join('')}
+                </tbody>
+              </table>
+            </div>
           `;
         }
       } catch (error) {
@@ -324,7 +436,7 @@
       document.getElementById('current-file').textContent = '';
       document.getElementById('case-file').required = true;
       updateTagsDisplay();
-      document.getElementById('case-modal').classList.add('active');
+      document.getElementById('case-modal').classList.remove('hidden');
     }
 
     // Edit case
@@ -343,7 +455,7 @@
         document.getElementById('case-file').required = false;
         caseTags = caseData.tags || [];
         updateTagsDisplay();
-        document.getElementById('case-modal').classList.add('active');
+        document.getElementById('case-modal').classList.remove('hidden');
       } catch (error) {
         console.error('Error loading case:', error);
         alert('Не вдалося завантажити деталі кейсу');
@@ -382,13 +494,13 @@
         } else {
           const error = await response.json();
           document.getElementById('case-message').innerHTML = `
-            <div class="alert alert-error">${error.error}</div>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">${error.error}</div>
           `;
         }
       } catch (error) {
         console.error('Error saving case:', error);
         document.getElementById('case-message').innerHTML = `
-          <div class="alert alert-error">Не вдалося зберегти кейс. Спробуйте ще раз.</div>
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">Не вдалося зберегти кейс. Спробуйте ще раз.</div>
         `;
       }
     }
@@ -415,7 +527,7 @@
 
     // Close case modal
     function closeCaseModal() {
-      document.getElementById('case-modal').classList.remove('active');
+      document.getElementById('case-modal').classList.add('hidden');
       document.getElementById('case-message').innerHTML = '';
     }
 
@@ -446,11 +558,15 @@
 
       // Add tag items before input
       caseTags.forEach(tag => {
-        const tagEl = document.createElement('div');
-        tagEl.className = 'tag-item';
+        const tagEl = document.createElement('span');
+        tagEl.className = 'tag-item inline-flex items-center gap-1 px-3 py-1 bg-primary text-white rounded-full text-sm';
         tagEl.innerHTML = `
           ${tag}
-          <button type="button" onclick="removeTagFromCase('${tag}')">&times;</button>
+          <button type="button" onclick="removeTagFromCase('${tag}')" class="hover:bg-primary-dark rounded-full p-0.5">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
         `;
         container.insertBefore(tagEl, input);
       });
@@ -467,7 +583,7 @@
       document.getElementById('org-modal-title').textContent = 'Додати нову організацію';
       document.getElementById('org-form').reset();
       document.getElementById('org-id').value = '';
-      document.getElementById('org-modal').classList.add('active');
+      document.getElementById('org-modal').classList.remove('hidden');
     }
 
     async function editOrganization(orgId) {
@@ -481,7 +597,7 @@
         document.getElementById('org-name').value = org.name;
         document.getElementById('org-logo').value = org.logo_url || '';
         document.getElementById('org-description').value = org.description || '';
-        document.getElementById('org-modal').classList.add('active');
+        document.getElementById('org-modal').classList.remove('hidden');
       } catch (error) {
         console.error('Error loading organization:', error);
         alert('Не вдалося завантажити деталі організації');
@@ -514,13 +630,13 @@
         } else {
           const error = await response.json();
           document.getElementById('org-message').innerHTML = `
-            <div class="alert alert-error">${error.error}</div>
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">${error.error}</div>
           `;
         }
       } catch (error) {
         console.error('Error saving organization:', error);
         document.getElementById('org-message').innerHTML = `
-          <div class="alert alert-error">Не вдалося зберегти організацію. Спробуйте ще раз.</div>
+          <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">Не вдалося зберегти організацію. Спробуйте ще раз.</div>
         `;
       }
     }
@@ -545,7 +661,7 @@
     }
 
     function closeOrgModal() {
-      document.getElementById('org-modal').classList.remove('active');
+      document.getElementById('org-modal').classList.add('hidden');
       document.getElementById('org-message').innerHTML = '';
     }
 
