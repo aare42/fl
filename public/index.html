@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Кейси з фінансової грамотності - Реальні завдання для учнів</title>
+  <meta name="description" content="Високоякісні кейси з фінансової грамотності від реальних організацій, адаптовані для шкільної освіти">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <h1>Кейси з фінансової грамотності</h1>
+      <ul>
+        <li><a href="/">Головна</a></li>
+        <li><a href="/cases">Переглянути кейси</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-content">
+      <h2>Реальна фінансова грамотність для учнів</h2>
+      <p>
+        Ми заповнюємо прогалину між теоретичною освітою з фінансової грамотності та реальною практикою,
+        збираючи автентичні кейси від банків та фінансових організацій, ретельно адаптовані для
+        шкільних учнів. Якісний контент для вчителів, практичні знання для учнів та соціальна
+        відповідальність для наших партнерів.
+      </p>
+      <a href="/cases" class="btn btn-primary">Переглянути кейси</a>
+    </div>
+  </section>
+
+  <div class="container">
+    <section class="section">
+      <h2>Як це працює</h2>
+      <div class="feature-grid">
+        <div class="feature-item">
+          <h3>1. Збір</h3>
+          <p>Ми співпрацюємо з банками та фінансовими організаціями, щоб зібрати реальні кейси та сценарії.</p>
+        </div>
+        <div class="feature-item">
+          <h3>2. Адаптація</h3>
+          <p>Кожен кейс ретельно адаптується відповідно до віку та узгоджується зі шкільною програмою.</p>
+        </div>
+        <div class="feature-item">
+          <h3>3. Поширення</h3>
+          <p>Вчителі отримують доступ до високоякісного, готового до використання контенту, який оживляє фінансову грамотність.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Чому це важливо</h2>
+      <div class="feature-grid">
+        <div class="feature-item">
+          <h3>Для учнів</h3>
+          <p>Навчання на реальних сценаріях замість теоретичних вправ. Розуміння того, як фінансові рішення працюють на практиці.</p>
+        </div>
+        <div class="feature-item">
+          <h3>Для вчителів</h3>
+          <p>Доступ до структурованої бази даних високоякісного контенту з пошуком за темами. Не потрібно створювати вправи з нуля.</p>
+        </div>
+        <div class="feature-item">
+          <h3>Для організацій</h3>
+          <p>Демонстрація соціальної відповідальності та навчання наступного покоління фінансової грамотності.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Наші партнери</h2>
+      <p>Ми вдячні за співпрацю з організаціями, які підтримують фінансову освіту:</p>
+      <div class="partners-grid" id="partners-list">
+        <div class="spinner"></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Долучайтесь</h2>
+      <p>
+        Ви фінансова організація, зацікавлена у наданні кейсів? Або вчитель із відгуками про те,
+        як ми можемо покращити сервіс? Ми будемо раді почути вас!
+      </p>
+      <p style="margin-top: 1.5rem;">
+        <strong>Зв'яжіться з нами:</strong> education@financialliteracy.example.com
+      </p>
+    </section>
+  </div>
+
+  <script>
+    // Load partners
+    async function loadPartners() {
+      try {
+        const response = await fetch('/api/organizations');
+        const organizations = await response.json();
+
+        const partnersList = document.getElementById('partners-list');
+
+        if (organizations.length === 0) {
+          partnersList.innerHTML = `
+            <div class="empty-state">
+              <h3>Незабаром</h3>
+              <p>Ми зараз працюємо над партнерством з фінансовими організаціями.</p>
+            </div>
+          `;
+        } else {
+          partnersList.innerHTML = organizations.map(org => `
+            <div class="partner-card">
+              ${org.logo_url ? `<img src="${org.logo_url}" alt="${org.name}" style="max-width: 150px; height: 60px; object-fit: contain; margin-bottom: 1rem;">` : ''}
+              <h4>${org.name}</h4>
+              ${org.description ? `<p style="color: var(--text-gray); font-size: 0.875rem;">${org.description}</p>` : ''}
+            </div>
+          `).join('');
+        }
+      } catch (error) {
+        console.error('Error loading partners:', error);
+        document.getElementById('partners-list').innerHTML = `
+          <div class="empty-state">
+            <p>Не вдалося завантажити партнерів.</p>
+          </div>
+        `;
+      }
+    }
+
+    // Initialize
+    loadPartners();
+  </script>
+</body>
+</html>

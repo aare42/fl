@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Панель адміністратора - Кейси з фінансової грамотності</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header>
+    <nav>
+      <h1>Кейси з фінансової грамотності</h1>
+      <ul>
+        <li><a href="/">Головна</a></li>
+        <li><a href="/cases">Переглянути кейси</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <div class="container">
+    <!-- Login Form -->
+    <section id="login-section" class="section" style="max-width: 400px; margin: 2rem auto;">
+      <h2>Вхід для адміністратора</h2>
+      <div id="login-message"></div>
+      <form id="login-form" onsubmit="login(event)">
+        <div class="form-group">
+          <label for="username">Ім'я користувача</label>
+          <input type="text" id="username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">Пароль</label>
+          <input type="password" id="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: 100%;">Увійти</button>
+      </form>
+      <p style="margin-top: 1rem; color: var(--text-gray); font-size: 0.875rem;">
+        Стандартні дані: admin / admin123
+      </p>
+    </section>
+
+    <!-- Admin Panel -->
+    <div id="admin-panel" style="display: none;">
+      <section class="section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+          <h2>Панель адміністратора</h2>
+          <button class="btn btn-secondary" onclick="logout()">Вийти</button>
+        </div>
+
+        <div class="admin-actions">
+          <button class="btn btn-primary" onclick="showSection('cases')">Керування кейсами</button>
+          <button class="btn btn-primary" onclick="showSection('organizations')">Керування організаціями</button>
+        </div>
+      </section>
+
+      <!-- Cases Section -->
+      <section id="cases-section" class="section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <h3>Кейси</h3>
+          <button class="btn btn-success" onclick="showAddCaseModal()">Додати новий кейс</button>
+        </div>
+        <div id="cases-list-admin">
+          <div class="spinner"></div>
+        </div>
+      </section>
+
+      <!-- Organizations Section -->
+      <section id="organizations-section" class="section" style="display: none;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+          <h3>Партнерські організації</h3>
+          <button class="btn btn-success" onclick="showAddOrgModal()">Додати нову організацію</button>
+        </div>
+        <div id="organizations-list-admin">
+          <div class="spinner"></div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Add/Edit Case Modal -->
+  <div id="case-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="case-modal-title">Додати новий кейс</h2>
+        <button class="close-btn" onclick="closeCaseModal()">&times;</button>
+      </div>
+      <div id="case-message"></div>
+      <form id="case-form" onsubmit="saveCase(event)">
+        <input type="hidden" id="case-id">
+        <div class="form-group">
+          <label for="case-name">Назва кейсу *</label>
+          <input type="text" id="case-name" required>
+        </div>
+        <div class="form-group">
+          <label for="case-description">Опис</label>
+          <textarea id="case-description" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="case-organization">Партнерська організація</label>
+          <select id="case-organization">
+            <option value="">Без партнера</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="case-file">Файл (PDF або TEX) *</label>
+          <input type="file" id="case-file" accept=".pdf,.tex">
+          <small id="current-file" style="display: block; margin-top: 0.5rem; color: var(--text-gray);"></small>
+        </div>
+        <div class="form-group">
+          <label for="case-tags-input">Теги (натисніть Enter, щоб додати)</label>
+          <div class="tag-input" id="case-tags-container">
+            <input type="text" id="case-tags-input" placeholder="Введіть тег і натисніть Enter">
+          </div>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <button type="submit" class="btn btn-success">Зберегти кейс</button>
+          <button type="button" class="btn btn-secondary" onclick="closeCaseModal()">Скасувати</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Add/Edit Organization Modal -->
+  <div id="org-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="org-modal-title">Додати нову організацію</h2>
+        <button class="close-btn" onclick="closeOrgModal()">&times;</button>
+      </div>
+      <div id="org-message"></div>
+      <form id="org-form" onsubmit="saveOrganization(event)">
+        <input type="hidden" id="org-id">
+        <div class="form-group">
+          <label for="org-name">Назва організації *</label>
+          <input type="text" id="org-name" required>
+        </div>
+        <div class="form-group">
+          <label for="org-logo">URL логотипу</label>
+          <input type="url" id="org-logo" placeholder="https://example.com/logo.png">
+        </div>
+        <div class="form-group">
+          <label for="org-description">Опис</label>
+          <textarea id="org-description" rows="3"></textarea>
+        </div>
+        <div style="display: flex; gap: 1rem;">
+          <button type="submit" class="btn btn-success">Зберегти організацію</button>
+          <button type="button" class="btn btn-secondary" onclick="closeOrgModal()">Скасувати</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let caseTags = [];
+    let currentCaseId = null;
+    let currentOrgId = null;
+
+    // Check authentication status
+    async function checkAuth() {
+      try {
+        const response = await fetch('/api/auth/status');
+        const data = await response.json();
+
+        if (data.authenticated) {
+          document.getElementById('login-section').style.display = 'none';
+          document.getElementById('admin-panel').style.display = 'block';
+          loadOrganizations();
+          loadCases();
+        } else {
+          document.getElementById('login-section').style.display = 'block';
+          document.getElementById('admin-panel').style.display = 'none';
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+      }
+    }
+
+    // Login
+    async function login(event) {
+      event.preventDefault();
+
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          document.getElementById('login-message').innerHTML = '';
+          checkAuth();
+        } else {
+          document.getElementById('login-message').innerHTML = `
+            <div class="alert alert-error">${data.error}</div>
+          `;
+        }
+      } catch (error) {
+        console.error('Login failed:', error);
+        document.getElementById('login-message').innerHTML = `
+          <div class="alert alert-error">Помилка входу. Спробуйте ще раз.</div>
+        `;
+      }
+    }
+
+    // Logout
+    async function logout() {
+      try {
+        await fetch('/api/auth/logout', { method: 'POST' });
+        checkAuth();
+      } catch (error) {
+        console.error('Logout failed:', error);
+      }
+    }
+
+    // Show section
+    function showSection(section) {
+      document.getElementById('cases-section').style.display = section === 'cases' ? 'block' : 'none';
+      document.getElementById('organizations-section').style.display = section === 'organizations' ? 'block' : 'none';
+    }
+
+    // Load cases
+    async function loadCases() {
+      try {
+        const response = await fetch('/api/cases');
+        const cases = await response.json();
+
+        const casesList = document.getElementById('cases-list-admin');
+
+        if (cases.length === 0) {
+          casesList.innerHTML = '<div class="empty-state"><p>Ще немає кейсів. Додайте перший кейс!</p></div>';
+        } else {
+          casesList.innerHTML = `
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="border-bottom: 2px solid var(--border-color);">
+                  <th style="text-align: left; padding: 0.75rem;">Назва</th>
+                  <th style="text-align: left; padding: 0.75rem;">Організація</th>
+                  <th style="text-align: left; padding: 0.75rem;">Теги</th>
+                  <th style="text-align: left; padding: 0.75rem;">Тип</th>
+                  <th style="text-align: right; padding: 0.75rem;">Дії</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${cases.map(c => `
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 0.75rem;">${c.name}</td>
+                    <td style="padding: 0.75rem;">${c.organization_name || '-'}</td>
+                    <td style="padding: 0.75rem;">
+                      ${c.tags && c.tags.length > 0 ? c.tags.map(t => `<span class="tag" style="font-size: 0.75rem;">${t}</span>`).join(' ') : '-'}
+                    </td>
+                    <td style="padding: 0.75rem;">${c.file_type.toUpperCase()}</td>
+                    <td style="padding: 0.75rem; text-align: right;">
+                      <button class="btn btn-secondary" onclick="editCase(${c.id})" style="padding: 0.5rem 1rem; margin-right: 0.5rem;">Редагувати</button>
+                      <button class="btn btn-danger" onclick="deleteCase(${c.id})" style="padding: 0.5rem 1rem;">Видалити</button>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `;
+        }
+      } catch (error) {
+        console.error('Error loading cases:', error);
+      }
+    }
+
+    // Load organizations
+    async function loadOrganizations() {
+      try {
+        const response = await fetch('/api/organizations');
+        const organizations = await response.json();
+
+        // Update organization select in case form
+        const orgSelect = document.getElementById('case-organization');
+        orgSelect.innerHTML = '<option value="">Без партнера</option>' +
+          organizations.map(org => `<option value="${org.id}">${org.name}</option>`).join('');
+
+        // Update organizations list
+        const orgsList = document.getElementById('organizations-list-admin');
+
+        if (organizations.length === 0) {
+          orgsList.innerHTML = '<div class="empty-state"><p>Ще немає організацій. Додайте першого партнера!</p></div>';
+        } else {
+          orgsList.innerHTML = `
+            <table style="width: 100%; border-collapse: collapse;">
+              <thead>
+                <tr style="border-bottom: 2px solid var(--border-color);">
+                  <th style="text-align: left; padding: 0.75rem;">Назва</th>
+                  <th style="text-align: left; padding: 0.75rem;">Опис</th>
+                  <th style="text-align: right; padding: 0.75rem;">Дії</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${organizations.map(org => `
+                  <tr style="border-bottom: 1px solid var(--border-color);">
+                    <td style="padding: 0.75rem;">${org.name}</td>
+                    <td style="padding: 0.75rem;">${org.description || '-'}</td>
+                    <td style="padding: 0.75rem; text-align: right;">
+                      <button class="btn btn-secondary" onclick="editOrganization(${org.id})" style="padding: 0.5rem 1rem; margin-right: 0.5rem;">Редагувати</button>
+                      <button class="btn btn-danger" onclick="deleteOrganization(${org.id})" style="padding: 0.5rem 1rem;">Видалити</button>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          `;
+        }
+      } catch (error) {
+        console.error('Error loading organizations:', error);
+      }
+    }
+
+    // Show add case modal
+    function showAddCaseModal() {
+      currentCaseId = null;
+      caseTags = [];
+      document.getElementById('case-modal-title').textContent = 'Додати новий кейс';
+      document.getElementById('case-form').reset();
+      document.getElementById('case-id').value = '';
+      document.getElementById('current-file').textContent = '';
+      document.getElementById('case-file').required = true;
+      updateTagsDisplay();
+      document.getElementById('case-modal').classList.add('active');
+    }
+
+    // Edit case
+    async function editCase(caseId) {
+      try {
+        const response = await fetch(`/api/cases/${caseId}`);
+        const caseData = await response.json();
+
+        currentCaseId = caseId;
+        document.getElementById('case-modal-title').textContent = 'Редагувати кейс';
+        document.getElementById('case-id').value = caseId;
+        document.getElementById('case-name').value = caseData.name;
+        document.getElementById('case-description').value = caseData.description || '';
+        document.getElementById('case-organization').value = caseData.organization_id || '';
+        document.getElementById('current-file').textContent = `Поточний файл: ${caseData.file_path.split('/').pop()}`;
+        document.getElementById('case-file').required = false;
+        caseTags = caseData.tags || [];
+        updateTagsDisplay();
+        document.getElementById('case-modal').classList.add('active');
+      } catch (error) {
+        console.error('Error loading case:', error);
+        alert('Не вдалося завантажити деталі кейсу');
+      }
+    }
+
+    // Save case
+    async function saveCase(event) {
+      event.preventDefault();
+
+      const caseId = document.getElementById('case-id').value;
+      const formData = new FormData();
+
+      formData.append('name', document.getElementById('case-name').value);
+      formData.append('description', document.getElementById('case-description').value);
+      formData.append('organization_id', document.getElementById('case-organization').value);
+      formData.append('tags', JSON.stringify(caseTags));
+
+      const fileInput = document.getElementById('case-file');
+      if (fileInput.files.length > 0) {
+        formData.append('file', fileInput.files[0]);
+      }
+
+      try {
+        const url = caseId ? `/api/cases/${caseId}` : '/api/cases';
+        const method = caseId ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+          method: method,
+          body: formData
+        });
+
+        if (response.ok) {
+          closeCaseModal();
+          loadCases();
+        } else {
+          const error = await response.json();
+          document.getElementById('case-message').innerHTML = `
+            <div class="alert alert-error">${error.error}</div>
+          `;
+        }
+      } catch (error) {
+        console.error('Error saving case:', error);
+        document.getElementById('case-message').innerHTML = `
+          <div class="alert alert-error">Не вдалося зберегти кейс. Спробуйте ще раз.</div>
+        `;
+      }
+    }
+
+    // Delete case
+    async function deleteCase(caseId) {
+      if (!confirm('Ви впевнені, що хочете видалити цей кейс? Цю дію не можна скасувати.')) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/cases/${caseId}`, { method: 'DELETE' });
+
+        if (response.ok) {
+          loadCases();
+        } else {
+          alert('Не вдалося видалити кейс');
+        }
+      } catch (error) {
+        console.error('Error deleting case:', error);
+        alert('Не вдалося видалити кейс');
+      }
+    }
+
+    // Close case modal
+    function closeCaseModal() {
+      document.getElementById('case-modal').classList.remove('active');
+      document.getElementById('case-message').innerHTML = '';
+    }
+
+    // Tag input handling
+    document.addEventListener('DOMContentLoaded', () => {
+      const tagInput = document.getElementById('case-tags-input');
+      if (tagInput) {
+        tagInput.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            const tag = tagInput.value.trim();
+            if (tag && !caseTags.includes(tag)) {
+              caseTags.push(tag);
+              updateTagsDisplay();
+              tagInput.value = '';
+            }
+          }
+        });
+      }
+    });
+
+    function updateTagsDisplay() {
+      const container = document.getElementById('case-tags-container');
+      const input = document.getElementById('case-tags-input');
+
+      // Remove existing tag items
+      container.querySelectorAll('.tag-item').forEach(el => el.remove());
+
+      // Add tag items before input
+      caseTags.forEach(tag => {
+        const tagEl = document.createElement('div');
+        tagEl.className = 'tag-item';
+        tagEl.innerHTML = `
+          ${tag}
+          <button type="button" onclick="removeTagFromCase('${tag}')">&times;</button>
+        `;
+        container.insertBefore(tagEl, input);
+      });
+    }
+
+    function removeTagFromCase(tag) {
+      caseTags = caseTags.filter(t => t !== tag);
+      updateTagsDisplay();
+    }
+
+    // Organization functions
+    function showAddOrgModal() {
+      currentOrgId = null;
+      document.getElementById('org-modal-title').textContent = 'Додати нову організацію';
+      document.getElementById('org-form').reset();
+      document.getElementById('org-id').value = '';
+      document.getElementById('org-modal').classList.add('active');
+    }
+
+    async function editOrganization(orgId) {
+      try {
+        const response = await fetch(`/api/organizations/${orgId}`);
+        const org = await response.json();
+
+        currentOrgId = orgId;
+        document.getElementById('org-modal-title').textContent = 'Редагувати організацію';
+        document.getElementById('org-id').value = orgId;
+        document.getElementById('org-name').value = org.name;
+        document.getElementById('org-logo').value = org.logo_url || '';
+        document.getElementById('org-description').value = org.description || '';
+        document.getElementById('org-modal').classList.add('active');
+      } catch (error) {
+        console.error('Error loading organization:', error);
+        alert('Не вдалося завантажити деталі організації');
+      }
+    }
+
+    async function saveOrganization(event) {
+      event.preventDefault();
+
+      const orgId = document.getElementById('org-id').value;
+      const data = {
+        name: document.getElementById('org-name').value,
+        logo_url: document.getElementById('org-logo').value,
+        description: document.getElementById('org-description').value
+      };
+
+      try {
+        const url = orgId ? `/api/organizations/${orgId}` : '/api/organizations';
+        const method = orgId ? 'PUT' : 'POST';
+
+        const response = await fetch(url, {
+          method: method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+
+        if (response.ok) {
+          closeOrgModal();
+          loadOrganizations();
+        } else {
+          const error = await response.json();
+          document.getElementById('org-message').innerHTML = `
+            <div class="alert alert-error">${error.error}</div>
+          `;
+        }
+      } catch (error) {
+        console.error('Error saving organization:', error);
+        document.getElementById('org-message').innerHTML = `
+          <div class="alert alert-error">Не вдалося зберегти організацію. Спробуйте ще раз.</div>
+        `;
+      }
+    }
+
+    async function deleteOrganization(orgId) {
+      if (!confirm('Ви впевнені, що хочете видалити цю організацію? Кейси, пов\'язані з нею, залишаться, але втратять посилання на організацію.')) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/organizations/${orgId}`, { method: 'DELETE' });
+
+        if (response.ok) {
+          loadOrganizations();
+        } else {
+          alert('Не вдалося видалити організацію');
+        }
+      } catch (error) {
+        console.error('Error deleting organization:', error);
+        alert('Не вдалося видалити організацію');
+      }
+    }
+
+    function closeOrgModal() {
+      document.getElementById('org-modal').classList.remove('active');
+      document.getElementById('org-message').innerHTML = '';
+    }
+
+    // Close modals on background click
+    document.getElementById('case-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'case-modal') closeCaseModal();
+    });
+
+    document.getElementById('org-modal').addEventListener('click', (e) => {
+      if (e.target.id === 'org-modal') closeOrgModal();
+    });
+
+    // Initialize
+    checkAuth();
+  </script>
+</body>
+</html>
