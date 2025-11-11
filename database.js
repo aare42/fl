@@ -1,8 +1,17 @@
 const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcryptjs');
 const path = require('path');
+const fs = require('fs');
 
-const dbPath = path.join(__dirname, 'database.sqlite');
+// Use /app/data for production (Railway volumes), current directory for local
+const dataDir = process.env.RAILWAY_ENVIRONMENT ? '/app/data' : __dirname;
+
+// Ensure data directory exists
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
+
+const dbPath = path.join(dataDir, 'database.sqlite');
 const db = new sqlite3.Database(dbPath);
 
 const initialize = () => {
