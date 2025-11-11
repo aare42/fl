@@ -6,6 +6,7 @@ const db = require('./database');
 const authRoutes = require('./routes/auth');
 const casesRoutes = require('./routes/cases');
 const organizationsRoutes = require('./routes/organizations');
+const statisticsRoutes = require('./routes/statistics');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -28,6 +29,7 @@ app.use(session({
 app.use('/api/auth', authRoutes);
 app.use('/api/cases', casesRoutes);
 app.use('/api/organizations', organizationsRoutes);
+app.use('/api/statistics', statisticsRoutes);
 
 // Serve HTML pages
 app.get('/', (req, res) => {
@@ -40,6 +42,10 @@ app.get('/cases', (req, res) => {
 
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'admin.html'));
+});
+
+app.get('/statistics', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'statistics.html'));
 });
 
 // Initialize database and start server

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Статистика партнерів - Кейси з фінансової грамотності</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#40ba8d',
+            'primary-dark': '#359a75',
+            secondary: '#CE2A1E',
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-gray-50">
+  <!-- Navigation -->
+  <header class="bg-white shadow-sm sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <h1 class="text-xl font-semibold text-gray-900">Кейси з фінансової грамотності</h1>
+        <ul class="flex space-x-8">
+          <li><a href="/" class="text-gray-700 hover:text-primary transition">Головна</a></li>
+          <li><a href="/cases" class="text-gray-700 hover:text-primary transition">Переглянути кейси</a></li>
+          <li><a href="/statistics" class="text-primary font-medium hover:text-primary-dark transition">Статистика</a></li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Page Header -->
+  <div class="bg-gradient-to-br from-primary to-primary-dark text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <h1 class="text-4xl font-bold mb-4">Рейтинг партнерів</h1>
+      <p class="text-lg text-white/90">Подяка організаціям за внесок у фінансову освіту України</p>
+    </div>
+  </div>
+
+  <!-- Statistics Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <!-- Summary Cards -->
+    <div class="grid md:grid-cols-3 gap-6 mb-12">
+      <div class="bg-white rounded-xl shadow-md p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600 uppercase tracking-wider">Всього партнерів</p>
+            <p id="total-partners" class="text-3xl font-bold text-gray-900 mt-2">-</p>
+          </div>
+          <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-md p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600 uppercase tracking-wider">Всього кейсів</p>
+            <p id="total-cases" class="text-3xl font-bold text-gray-900 mt-2">-</p>
+          </div>
+          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-md p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600 uppercase tracking-wider">Всього завантажень</p>
+            <p id="total-downloads" class="text-3xl font-bold text-gray-900 mt-2">-</p>
+          </div>
+          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h2 class="text-xl font-bold text-gray-900">Таблиця лідерів</h2>
+        <p class="text-sm text-gray-600 mt-1">Рейтинг партнерів за кількістю кейсів та завантажень</p>
+      </div>
+
+      <div id="leaderboard-content">
+        <div class="flex justify-center py-20">
+          <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function loadStatistics() {
+      try {
+        const response = await fetch('/api/statistics');
+        const stats = await response.json();
+
+        // Calculate totals
+        const totalPartners = stats.length;
+        const totalCases = stats.reduce((sum, s) => sum + s.case_count, 0);
+        const totalDownloads = stats.reduce((sum, s) => sum + s.total_downloads, 0);
+
+        // Update summary cards
+        document.getElementById('total-partners').textContent = totalPartners;
+        document.getElementById('total-cases').textContent = totalCases;
+        document.getElementById('total-downloads').textContent = totalDownloads;
+
+        // Render leaderboard
+        const leaderboardContent = document.getElementById('leaderboard-content');
+
+        if (stats.length === 0) {
+          leaderboardContent.innerHTML = `
+            <div class="text-center py-12">
+              <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+              </svg>
+              <p class="text-xl font-semibold text-gray-900 mb-2">Поки немає статистики</p>
+              <p class="text-gray-600">Статистика з'явиться, коли партнери почнуть додавати кейси</p>
+            </div>
+          `;
+          return;
+        }
+
+        leaderboardContent.innerHTML = `
+          <div class="overflow-x-auto">
+            <table class="w-full">
+              <thead class="bg-gray-50">
+                <tr>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider w-20">Місце</th>
+                  <th class="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Партнер</th>
+                  <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Кейси</th>
+                  <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Завантаження</th>
+                  <th class="px-6 py-4 text-center text-xs font-semibold text-gray-600 uppercase tracking-wider">Середня популярність</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-200">
+                ${stats.map((stat, index) => {
+                  const avgDownloads = stat.case_count > 0 ? (stat.total_downloads / stat.case_count).toFixed(1) : 0;
+                  const rankClass = index === 0 ? 'bg-amber-50' : index === 1 ? 'bg-gray-50' : index === 2 ? 'bg-orange-50' : '';
+                  const medal = index === 0 ? '🥇' : index === 1 ? '🥈' : index === 2 ? '🥉' : '';
+
+                  return `
+                    <tr class="hover:bg-gray-50 ${rankClass}">
+                      <td class="px-6 py-4">
+                        <div class="flex items-center gap-2">
+                          <span class="text-2xl font-bold text-gray-400">#${index + 1}</span>
+                          ${medal ? `<span class="text-2xl">${medal}</span>` : ''}
+                        </div>
+                      </td>
+                      <td class="px-6 py-4">
+                        <div class="flex items-center gap-3">
+                          ${stat.logo_url ? `
+                            <img src="${stat.logo_url}" alt="${stat.name}" class="h-10 w-auto object-contain">
+                          ` : `
+                            <div class="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+                              <svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                              </svg>
+                            </div>
+                          `}
+                          <div>
+                            <div class="font-semibold text-gray-900">${stat.name}</div>
+                            ${stat.description ? `<div class="text-sm text-gray-600">${stat.description}</div>` : ''}
+                          </div>
+                        </div>
+                      </td>
+                      <td class="px-6 py-4 text-center">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-blue-100 text-blue-700">
+                          ${stat.case_count}
+                        </span>
+                      </td>
+                      <td class="px-6 py-4 text-center">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-700">
+                          ${stat.total_downloads}
+                        </span>
+                      </td>
+                      <td class="px-6 py-4 text-center">
+                        <div class="flex items-center justify-center gap-2">
+                          <div class="w-32 bg-gray-200 rounded-full h-2">
+                            <div class="bg-primary h-2 rounded-full" style="width: ${Math.min((avgDownloads / 10) * 100, 100)}%"></div>
+                          </div>
+                          <span class="text-sm font-medium text-gray-700">${avgDownloads}</span>
+                        </div>
+                      </td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      } catch (error) {
+        console.error('Error loading statistics:', error);
+        document.getElementById('leaderboard-content').innerHTML = `
+          <div class="text-center py-12">
+            <p class="text-xl font-semibold text-gray-900 mb-2">Помилка завантаження статистики</p>
+            <p class="text-gray-600">Спробуйте оновити сторінку</p>
+          </div>
+        `;
+      }
+    }
+
+    // Initialize
+    loadStatistics();
+  </script>
+</body>
+</html>

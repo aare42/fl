@@ -37,10 +37,21 @@ const initialize = () => {
           file_path TEXT NOT NULL,
           file_type TEXT NOT NULL,
           organization_id INTEGER,
+          download_count INTEGER DEFAULT 0,
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
           FOREIGN KEY (organization_id) REFERENCES organizations(id)
         )
       `);
+
+      // Add download_count column if it doesn't exist (migration)
+      db.run(`
+        ALTER TABLE cases ADD COLUMN download_count INTEGER DEFAULT 0
+      `, (err) => {
+        // Ignore error if column already exists
+        if (err && !err.message.includes('duplicate column')) {
+          console.error('Migration error:', err);
+        }
+      });
 
       // Case-Tag relationship table
       db.run(`
