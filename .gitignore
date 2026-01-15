@@ -24,3 +24,11 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# Excel files (sensitive data)
+*.xlsx
+*.xlsm
+*.xls
+*.xlsb
+*.xltx
+*.xltm
