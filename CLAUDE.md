@@ -35,7 +35,7 @@ Financial literacy cases platform for Ukrainian schools. Built with Node.js/Expr
 
 ### Empty Database After Deployment
 **Problem**: Railway deployments can lose SQLite data during forced rebuilds
-**Solution**: Use `npm run seed` to populate with sample Ukrainian financial cases
+**Solution**: Use `npm run seed` to populate with sample fictional Ukrainian financial cases
 **Files**: `seed.js`, `package.json` (build script)
 
 ### File Uploads in Production  
@@ -45,7 +45,7 @@ Financial literacy cases platform for Ukrainian schools. Built with Node.js/Expr
 
 ## Development Commands
 - `npm run dev` - Start with nodemon for development
-- `npm run seed` - Populate database with sample data
+- `npm run seed` - Populate database with fictional sample data
 - `npm start` - Production server start
 
 ## Admin Access
@@ -55,6 +55,7 @@ Financial literacy cases platform for Ukrainian schools. Built with Node.js/Expr
 
 ## Deployment Notes
 - Railway auto-deploys from GitHub main branch
-- Build process runs `npm run seed` to ensure data exists
+- Build process runs `npm run seed` to ensure fictional sample data exists
 - Database persists in `/app/data` volume mount
 - Environment variables managed through Railway dashboard
+- Uses fictional organization names until real partnerships are established
