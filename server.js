@@ -11,11 +11,16 @@ const statisticsRoutes = require('./routes/statistics');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Use absolute path for uploads to match Railway volume mount at /app/uploads
+const UPLOADS_DIR = process.env.RAILWAY_ENVIRONMENT
+  ? '/app/uploads'
+  : path.join(__dirname, 'uploads');
+
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
-app.use('/uploads', express.static('uploads'));
+app.use('/uploads', express.static(UPLOADS_DIR));
 
 // Session configuration
 app.use(session({

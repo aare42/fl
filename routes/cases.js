@@ -7,14 +7,18 @@ const { requireAuth } = require('./auth');
 
 const router = express.Router();
 
+// Use absolute path for uploads to match Railway volume mount at /app/uploads
+const UPLOADS_DIR = process.env.RAILWAY_ENVIRONMENT
+  ? '/app/uploads'
+  : path.join(__dirname, '..', 'uploads');
+
 // Configure file upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    const uploadDir = 'uploads';
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir);
+    if (!fs.existsSync(UPLOADS_DIR)) {
+      fs.mkdirSync(UPLOADS_DIR, { recursive: true });
     }
-    cb(null, uploadDir);
+    cb(null, UPLOADS_DIR);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
@@ -138,7 +142,7 @@ router.post('/', requireAuth, upload.single('file'), (req, res) => {
     return res.status(400).json({ error: 'Name and file are required' });
   }
 
-  const file_path = req.file.path;
+  const file_path = 'uploads/' + req.file.filename;
   const file_type = path.extname(req.file.originalname).toLowerCase();
 
   db.run(
@@ -147,7 +151,8 @@ router.post('/', requireAuth, upload.single('file'), (req, res) => {
     function(err) {
       if (err) {
         // Clean up uploaded file
-        fs.unlinkSync(file_path);
+        const absPath = path.join(UPLOADS_DIR, req.file.filename);
+        if (fs.existsSync(absPath)) fs.unlinkSync(absPath);
         return res.status(500).json({ error: 'Database error' });
       }
 
@@ -188,10 +193,11 @@ router.put('/:id', requireAuth, upload.single('file'), (req, res) => {
 
     // If new file uploaded, delete old and use new
     if (req.file) {
-      if (fs.existsSync(existingCase.file_path)) {
-        fs.unlinkSync(existingCase.file_path);
+      const oldFilePath = path.join(UPLOADS_DIR, path.basename(existingCase.file_path));
+      if (fs.existsSync(oldFilePath)) {
+        fs.unlinkSync(oldFilePath);
       }
-      file_path = req.file.path;
+      file_path = 'uploads/' + req.file.filename;
       file_type = path.extname(req.file.originalname).toLowerCase();
     }
 
@@ -238,8 +244,9 @@ router.delete('/:id', requireAuth, (req, res) => {
     }
 
     // Delete file
-    if (fs.existsSync(caseData.file_path)) {
-      fs.unlinkSync(caseData.file_path);
+    const filePath = path.join(UPLOADS_DIR, path.basename(caseData.file_path));
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
     }
 
     // Delete case (cascade will delete case_tags)
